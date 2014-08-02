@@ -1,0 +1,90 @@
+<!DOCTYPE web-app PUBLIC
+		"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+		"http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Wiki statistics</display-name>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			WEB-INF/applicationContext.xml
+		</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>PageActivityServlet</servlet-name>
+		<servlet-class>org.dictat.wikistat.servlets.PageActivityServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>LangLinksServlet</servlet-name>
+		<servlet-class>org.dictat.wikistat.servlets.LangLinksServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>LanguageServlet</servlet-name>
+		<servlet-class>org.dictat.wikistat.servlets.LanguageServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>PageAutoCompleteServlet</servlet-name>
+		<servlet-class>org.dictat.wikistat.servlets.PageAutoCompleteServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>VersionServlet</servlet-name>
+		<servlet-class>org.dictat.wikistat.servlets.VersionServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>StatsServlet</servlet-name>
+		<servlet-class>org.dictat.wikistat.servlets.StatsServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PageActivityServlet</servlet-name>
+		<url-pattern>/s/pageactivity/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>PageAutoCompleteServlet</servlet-name>
+		<url-pattern>/s/pageautocomplete</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>LanguageServlet</servlet-name>
+		<url-pattern>/s/languages/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>VersionServlet</servlet-name>
+		<url-pattern>/s/version</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>LangLinksServlet</servlet-name>
+		<url-pattern>/s/langlinks/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>StatsServlet</servlet-name>
+		<url-pattern>/s/stats/*</url-pattern>
+	</servlet-mapping>
+
+	<!--
+	<servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+	-->
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<distributable/>
+
+</web-app>

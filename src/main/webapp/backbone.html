@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backbone gyakorlopalya</title>
+</head>
+<body>
+
+<a href="#birds">birds</a>
+<a href="#trees">trees</a>
+
+<span id="birds">
+
+</span>
+
+<span id="trees">
+
+</span>
+
+<span id="templates">
+</span>
+
+</body>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/underscore-min.js"></script>
+<script src="js/backbone-min.js"></script>
+<script src="script.js"></script>
+<script type="text/template" id="bird-template">
+   <span class="bird">
+       <h2><%= name %></h2>
+       <ul>
+           <li>wingspan: <%= wingspan %></li>
+           <li>weight: <%= weight %></li>
+       </ul>
+   </span>
+</script>
+<script type="text/template" id="tree-template">
+   <span class="tree">
+       <h2><%= name %></h2>
+       <h3>a tree</h3>
+       <ul>
+
+       </ul>
+   </span>
+</script>
+</html>

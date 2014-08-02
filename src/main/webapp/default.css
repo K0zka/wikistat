@@ -1,0 +1,22 @@
+.lang {
+	cursor: pointer;
+	padding: 5px;
+}
+
+.langlink {
+	padding: 5px;
+}
+
+.enabled {
+	cursor: pointer;
+	color: black;
+}
+
+.enabled:hover {
+	background-color: #FAFAFA;
+}
+
+.disabled {
+	color: gray;
+	font-size: small;
+}

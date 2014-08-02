@@ -1,0 +1,35 @@
+-----
+Data structure
+-----
+
+The data structure is broken up to two major parts, all optimized for reads and still good enough at write
+ * wiki activity
+ * totals
+While totals has is stored in single collection (called 'totals'), each wikipedia domain (en, de, cs, hu) has its
+own collection. One page in one language has one document in one mongodb collection.
+
+Wiki activity
+ * _id : the name of the page serves as primery key
+ * h : hourly activity
+ * d : daily activity
+ * m : monthly activity
+ * y : yearly activity
+
+ The activity logs are organized into key value pairs under the hourly/daily/monthly/yearly activity.
+ In each key-value pair, the date/time serves as key and the activity in that hour/day/month/year is the value.
+ Since only strings can be keys in dictionaries, the date objects are converted into a short string using the DateUtil
+ utility this functionality is also implemented in javascript to allow MongoDB execute it on teh DB side.
+
+ An example wiki activity may look like this:
+ {
+ _id : "Kurt Vonnegut",
+ h : {"a09":23, "a0a":21, "a0b": 10},
+ m : {"y" : 802, "z": 928, "!": 457},
+ y : {"5" : 23567, "6": 27342}
+ }
+
+ The quantity of such documents is high, even for small wikipedia sites it is hundreds of thousands.
+
+Totals:
+
+ The totals structure is relatively small from the perspective of document number

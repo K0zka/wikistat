@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="db" class="org.dictat.wikistat.services.mongodb.MongoDbFactory">
+		<constructor-arg value="localhost"/>
+		<constructor-arg value="wikistat"/>
+	</bean>
+
+	<bean id="wikiData" class="org.dictat.wikistat.wikidata.WikiData"/>
+
+	<bean id="dbThreadPool" class="org.dictat.wikistat.utils.BlockingThreadPoolExecutor">
+		<constructor-arg value="2"/>
+		<constructor-arg value="4"/>
+		<constructor-arg value="1"/>
+		<constructor-arg value="SECONDS"/>
+		<constructor-arg value="DB-"/>
+		<constructor-arg>
+			<bean class="java.util.concurrent.PriorityBlockingQueue">
+				<constructor-arg value="512"/>
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="networkThreadPool" class="org.dictat.wikistat.utils.BlockingThreadPoolExecutor">
+		<constructor-arg value="4"/>
+		<constructor-arg value="8"/>
+		<constructor-arg value="1"/>
+		<constructor-arg value="SECONDS"/>
+		<constructor-arg value="network-"/>
+		<constructor-arg>
+			<bean class="java.util.concurrent.PriorityBlockingQueue">
+				<constructor-arg value="512"/>
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean  id="novaDao" class="org.dictat.wikistat.services.async.AsyncNovaDao">
+		<constructor-arg>
+			<bean class="org.dictat.wikistat.services.mongodb.MongoNovaDaoImpl">
+				<constructor-arg ref="db"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg ref="dbThreadPool"/>
+	</bean>
+
+	<bean id="pageDao" class="org.dictat.wikistat.services.async.AsyncPageDao">
+		<constructor-arg>
+			<bean class="org.dictat.wikistat.services.mongodb.MongoPageDaoImpl">
+				<constructor-arg ref="db"/>
+				<constructor-arg ref="filters"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg ref="dbThreadPool"/>
+	</bean>
+
+	<bean id="statDao" class="org.dictat.wikistat.services.async.AsyncStatDao">
+		<constructor-arg>
+			<bean class="org.dictat.wikistat.services.mongodb.MongoStatDaoImpl">
+				<constructor-arg ref="db"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg ref="dbThreadPool"/>
+	</bean>
+
+	<bean class="java.util.ArrayList" id="filters">
+		<constructor-arg>
+			<list>
+				<value>hu</value>
+				<value>cs</value>
+				<!--
+				<value>sk</value>
+				<value>pl</value>
+				<value>uk</value>
+				-->
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="processing" abstract="true" init-method="start">
+		<constructor-arg ref="pageDao"/>
+		<constructor-arg ref="statDao"/>
+		<property name="filters" ref="filters"/>
+	</bean>
+
+	<bean
+			id="dumpProcessor"
+			class="org.dictat.wikistat.services.DumpProcessor"
+			parent="processing"/>
+
+	<bean
+			id="summarizer"
+			class="org.dictat.wikistat.services.Summarizer"
+			parent="processing">
+		<constructor-arg ref="novaDao"/>
+	</bean>
+
+    <bean id="schemaInit" class="org.dictat.wikistat.services.mongodb.MongoSchemaInitializer" init-method="init">
+        <constructor-arg ref="db"/>
+        <constructor-arg>
+            <list>
+                <!-- date compression support -->
+                <value>basedate</value>
+                <value>digits</value>
+
+                <!-- -->
+                <value>chartoint</value>
+                <value>inttochar</value>
+
+                <value>datetostr</value>
+                <value>strtodate</value>
+
+                <value>datetoint</value>
+                <value>inttodate</value>
+
+                <value>strtoint</value>
+                <value>inttostr</value>
+
+                <!-- misc utils -->
+                <value>numberofkeys</value>
+                <value>sumofall</value>
+                <value>sumofall</value>
+                <value>totalactivity</value>
+                <value>lastknownactivity</value>
+                <value>log</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+	<!--
+	<bean id="cleaner"
+		  class="org.dictat.wikistat.services.DataCleaner"
+		  parent="processing">
+		<constructor-arg ref="wikiData"/>
+	</bean>
+
+	<bean
+		id="pagefilter"
+		class="org.dictat.wikistat.services.FilterProcessor"
+		parent="processing">
+		<constructor-arg ref="networkThreadPool"/>
+		<constructor-arg ref="wikiData"/>
+	</bean>
+	-->
+
+</beans>
